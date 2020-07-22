@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -11,21 +9,6 @@ const (
 	windowHeight = 768
 	spriteSize   = 128
 )
-
-func textureFromBMP(renderer *sdl.Renderer, filename string) *sdl.Texture {
-	img, err := sdl.LoadBMP(filename)
-	if err != nil {
-		panic(fmt.Errorf("Loading %v: %v", filename, err))
-	}
-
-	defer img.Free()
-
-	tex, err := renderer.CreateTextureFromSurface(img)
-	if err != nil {
-		panic(fmt.Errorf("Creating texture from %v: %v", filename, err))
-	}
-	return tex
-}
 
 func main() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
