@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -54,7 +55,8 @@ func (p *player) update(renderer *sdl.Renderer) {
 			if b, ok := bulletFromPool(); ok {
 				b.active = true
 				b.x = p.x - 16
-				b.y = p.y - bulletSize * 1.5
+				b.y = p.y - (bulletSize * 1.5)
+				b.angle = 270 * (math.Pi / 180)
 
 				p.lastShot = time.Now()
 			}
