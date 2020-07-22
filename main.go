@@ -40,16 +40,6 @@ func main() {
 	}
 	defer window.Destroy()
 
-	// surface, err := window.GetSurface()
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// surface.FillRect(nil, 0)
-
-	// rect := sdl.Rect{X: 0, Y: 0, W: 20,H: 20}
-	// surface.FillRect(&rect, 0xffff0000)
-	// window.UpdateSurface()
-
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 
 	if err != nil {
@@ -60,8 +50,6 @@ func main() {
 
 	p := newPlayer(renderer)
 
-
-
 	var enemies []enemy
 
 	for i := 0; i < 5; i++ {
@@ -69,19 +57,16 @@ func main() {
 			x := (float64(i)/5)*windowWidth - 16
 			y := float64(j) * enemySize / 2.0
 
-			e:= newEnemy(renderer, x, y)
-
+			e := newEnemy(renderer, x, y)
 
 			// remember to assign positions
 			e.x = x
 			e.y = y
-			fmt.Println(e.x, e.y)
 			enemies = append(enemies, e)
 		}
 	}
 
-	fmt.Println(len(enemies))
-
+	initBPool(renderer)
 	// Loop so window doesn't close
 	running := true
 	for running {
@@ -109,6 +94,10 @@ func main() {
 
 		for _, enemy := range enemies {
 			enemy.draw(renderer)
+		}
+
+		for _, bullet := range bulletPool {
+			bullet.draw(renderer)
 		}
 		renderer.Present()
 	}

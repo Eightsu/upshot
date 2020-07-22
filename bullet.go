@@ -5,8 +5,9 @@ import "github.com/veandco/go-sdl2/sdl"
 const bulletSize = 32
 
 type bullet struct {
-	tex  *sdl.Texture
-	x, y float64
+	tex    *sdl.Texture
+	x, y   float64
+	active bool
 }
 
 func newBullet(renderer *sdl.Renderer) (b bullet) {
@@ -16,6 +17,10 @@ func newBullet(renderer *sdl.Renderer) (b bullet) {
 
 func (b *bullet) draw(renderer *sdl.Renderer) {
 
+	if !b.active {
+		return
+	}
+
 	x := b.x
 	y := b.y
 
@@ -24,10 +29,21 @@ func (b *bullet) draw(renderer *sdl.Renderer) {
 		&sdl.Rect{X: int32(x), Y: int32(y), W: 32, H: 32})
 }
 
-var bulletPool []bullet
+var bulletPool []*bullet
 
 func initBPool(renderer *sdl.Renderer) {
 	for i := 0; i < 20; i++ {
-		bulletPool = append(bulletPool, newBullet(renderer))
+		b := newBullet(renderer)
+		bulletPool = append(bulletPool, &b)
 	}
+}
+
+func bulletFromPool() (*bullet, bool) {
+	for _, b := range bulletPool {
+		if !b.active {
+			return b, true
+		}
+	}
+
+	return nil, false
 }

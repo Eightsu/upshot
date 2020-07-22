@@ -42,4 +42,12 @@ func (p *player) update(renderer *sdl.Renderer) {
 		p.x += playerSpeed
 	}
 
+	if keys[sdl.SCANCODE_SPACE] == 1 {
+		if b, ok := bulletFromPool(); ok {
+			b.active = true
+			b.x = p.x - spriteSize
+			b.y = p.y - bulletSize
+		}
+	}
+
 }
