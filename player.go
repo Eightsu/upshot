@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -14,21 +12,12 @@ type player struct {
 }
 
 // create new user, requires renderer
-func newPlayer(renderer *sdl.Renderer) (p player, err error) {
-	img, err := sdl.LoadBMP("assets/Player.bmp")
-	if err != nil {
-		return player{}, fmt.Errorf("Loading sprite failed: %v", err)
-	}
-	// after image is in texture, free it
-	defer img.Free()
-	// player texture
-	p.tex, err = renderer.CreateTextureFromSurface(img)
-	if err != nil {
-		return player{}, fmt.Errorf("Texture wasn't able to be mapped. Error: %v", err)
-	}
+func newPlayer(renderer *sdl.Renderer) (p player) {
+
+	p.tex = textureFromBMP(renderer, "assets/Player.bmp")
 	p.x = windowWidth / 2.0
 	p.y = windowHeight - spriteSize/2.0
-	return p, nil
+	return p
 }
 
 func (p *player) draw(renderer *sdl.Renderer) {

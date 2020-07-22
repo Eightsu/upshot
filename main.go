@@ -12,6 +12,21 @@ const (
 	spriteSize   = 128
 )
 
+func textureFromBMP(renderer *sdl.Renderer, filename string) *sdl.Texture {
+	img, err := sdl.LoadBMP(filename)
+	if err != nil {
+		panic(fmt.Errorf("Loading %v: %v", filename, err))
+	}
+
+	defer img.Free()
+
+	tex, err := renderer.CreateTextureFromSurface(img)
+	if err != nil {
+		panic(fmt.Errorf("Creating texture from %v: %v", filename, err))
+	}
+	return tex
+}
+
 func main() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
@@ -43,35 +58,29 @@ func main() {
 
 	defer renderer.Destroy()
 
-	p, err := newPlayer(renderer)
+	p := newPlayer(renderer)
 
-	if err != nil {
-		panic(err)
-	}
+
 
 	var enemies []enemy
 
 	for i := 0; i < 5; i++ {
 		for j := 0; j < 4; j++ {
-			x := (float64(i) / 5) * windowWidth - 16
+			x := (float64(i)/5)*windowWidth - 16
 			y := float64(j) * enemySize / 2.0
 
-			e, err := newEnemy(renderer, x, y)
-			if err != nil {
-				panic(err)
-			}
-			
+			e:= newEnemy(renderer, x, y)
+
 
 			// remember to assign positions
 			e.x = x
 			e.y = y
-			fmt.Println(e.x,e.y)
+			fmt.Println(e.x, e.y)
 			enemies = append(enemies, e)
 		}
 	}
 
 	fmt.Println(len(enemies))
-
 
 	// Loop so window doesn't close
 	running := true
