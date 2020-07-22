@@ -1,14 +1,20 @@
 package main
 
 import (
+	"time"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-const playerSpeed float64 = 1.5
+const (
+	playerSpeed  float64       = 1.5
+	shotCooldown time.Duration = time.Millisecond * 200
+)
 
 type player struct {
-	tex  *sdl.Texture
-	x, y float64
+	tex      *sdl.Texture
+	x, y     float64
+	lastShot time.Time
 }
 
 // create new user, requires renderer
@@ -43,10 +49,15 @@ func (p *player) update(renderer *sdl.Renderer) {
 	}
 
 	if keys[sdl.SCANCODE_SPACE] == 1 {
-		if b, ok := bulletFromPool(); ok {
-			b.active = true
-			b.x = p.x - spriteSize
-			b.y = p.y - bulletSize
+		if time.Since(p.lastShot) >= shotCooldown {
+
+			if b, ok := bulletFromPool(); ok {
+				b.active = true
+				b.x = p.x - 16
+				b.y = p.y - bulletSize * 1.5
+
+				p.lastShot = time.Now()
+			}
 		}
 	}
 
