@@ -1,12 +1,20 @@
 package main
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"math"
 
-const bulletSize = 32
+	"github.com/veandco/go-sdl2/sdl"
+)
+
+const (
+	bulletSize  = 32
+	bulletSpeed = 3.0
+)
 
 type bullet struct {
 	tex    *sdl.Texture
 	x, y   float64
+	angle  float64
 	active bool
 }
 
@@ -27,6 +35,15 @@ func (b *bullet) draw(renderer *sdl.Renderer) {
 	renderer.Copy(b.tex,
 		&sdl.Rect{X: 0, Y: 0, W: bulletSize, H: bulletSize},
 		&sdl.Rect{X: int32(x), Y: int32(y), W: bulletSize, H: bulletSize})
+}
+
+func (b *bullet) update() {
+	b.x += bulletSpeed * math.Cos(b.angle)
+	b.y += bulletSpeed * math.Sin(b.angle)
+
+	if b.y < 0-(spriteSize/2) {
+		b.active = false
+	}
 }
 
 var bulletPool []*bullet

@@ -98,6 +98,7 @@ func main() {
 
 		for _, bullet := range bulletPool {
 			bullet.draw(renderer)
+			bullet.update()
 		}
 		renderer.Present()
 	}
