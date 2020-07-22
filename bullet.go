@@ -25,8 +25,8 @@ func (b *bullet) draw(renderer *sdl.Renderer) {
 	y := b.y
 
 	renderer.Copy(b.tex,
-		&sdl.Rect{X: 0, Y: 0, W: 32, H: 32},
-		&sdl.Rect{X: int32(x), Y: int32(y), W: 32, H: 32})
+		&sdl.Rect{X: 0, Y: 0, W: bulletSize, H: bulletSize},
+		&sdl.Rect{X: int32(x), Y: int32(y), W: bulletSize, H: bulletSize})
 }
 
 var bulletPool []*bullet
