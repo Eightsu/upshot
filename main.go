@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -50,7 +52,6 @@ func main() {
 	}
 
 	initBPool(renderer)
-	// Loop so window doesn't close
 	running := true
 	for running {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -61,20 +62,19 @@ func main() {
 				break
 			}
 		}
-
-		// Bg Color
 		renderer.SetDrawColor(250, 240, 230, 255)
 
-		// Updates screen?
 		renderer.Clear()
 
-		// Put images on screen
-		// Second parameter chooses the size of texture based on img file. Could be used to grab different parts of a spritesheet
-		// third parameter could be used in relation to scaling(?)
+		err := p.draw(renderer)
+		if err != nil {
+			fmt.Printf("Drawing the player caused the following error: %v", err)
+		}
 
-		p.draw(renderer)
-		p.update(renderer)
-
+		err = p.update()
+		if err != nil {
+			fmt.Printf("Updating the player caused the following error: %v", err)
+		}
 		for _, enemy := range enemies {
 			enemy.draw(renderer)
 		}

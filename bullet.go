@@ -1,8 +1,6 @@
 package main
 
 import (
-	"math"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -11,56 +9,49 @@ const (
 	bulletSpeed = 3.0
 )
 
-type bullet struct {
-	tex    *sdl.Texture
-	x, y   float64
-	angle  float64
-	active bool
+func newBullet(renderer *sdl.Renderer) *element {
+
+	bullet := &element{}
+	sr := newSpriteRenderer(bullet, renderer, "assets/Bullet.bmp")
+
+	bullet.addComponent(sr)
+
+	mv := newBulletMover(bullet, bulletSpeed)
+
+	bullet.addComponent(mv)
+
+	bullet.active = false
+
+	return bullet
 }
 
-func newBullet(renderer *sdl.Renderer) (b bullet) {
-	b.tex = textureFromBMP(renderer, "assets/Bullet.bmp")
-	return b
-}
+var bulletPool []*element
 
-func (b *bullet) draw(renderer *sdl.Renderer) {
+// renderer.Copy(b.tex,
+// 	&sdl.Rect{X: 0, Y: 0, W: bulletSize, H: bulletSize},
+// 	&sdl.Rect{X: int32(x), Y: int32(y), W: bulletSize, H: bulletSize})
 
-	if !b.active {
-		return
-	}
+// func (b *bullet) update() {
+// 	b.x += bulletSpeed * math.Cos(b.angle)
+// 	b.y += bulletSpeed * math.Sin(b.angle)
 
-	x := b.x
-	y := b.y
-
-	renderer.Copy(b.tex,
-		&sdl.Rect{X: 0, Y: 0, W: bulletSize, H: bulletSize},
-		&sdl.Rect{X: int32(x), Y: int32(y), W: bulletSize, H: bulletSize})
-}
-
-func (b *bullet) update() {
-	b.x += bulletSpeed * math.Cos(b.angle)
-	b.y += bulletSpeed * math.Sin(b.angle)
-
-	if b.y < 0-(spriteSize/2) {
-		b.active = false
-	}
-}
-
-var bulletPool []*bullet
+// 	if b.y < 0-(spriteSize/2) {
+// 		b.active = false
+// 	}
+// }
 
 func initBPool(renderer *sdl.Renderer) {
 	for i := 0; i < 20; i++ {
 		b := newBullet(renderer)
-		bulletPool = append(bulletPool, &b)
+		bulletPool = append(bulletPool, b)
 	}
 }
 
-func bulletFromPool() (*bullet, bool) {
+func bulletFromPool() (*element, bool) {
 	for _, b := range bulletPool {
 		if !b.active {
 			return b, true
 		}
 	}
-
 	return nil, false
 }

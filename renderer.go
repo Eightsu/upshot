@@ -8,11 +8,12 @@ import (
 
 type spriteRenderer struct {
 	// container is the element associated with said sprite
-	container *element
-	tex *sdl.Texture
+	container     *element
+	tex           *sdl.Texture
+	width, height float64
 }
 
-// HELPERS
+// textureFromBMP does exactly that. Returns a pointer to sdl.Texture from a BMP
 func textureFromBMP(renderer *sdl.Renderer, filename string) *sdl.Texture {
 	img, err := sdl.LoadBMP(filename)
 	if err != nil {
@@ -28,43 +29,43 @@ func textureFromBMP(renderer *sdl.Renderer, filename string) *sdl.Texture {
 	return tex
 }
 
+func newSpriteRenderer(container *element, renderer *sdl.Renderer, filename string) *spriteRenderer {
 
+	tex := textureFromBMP(renderer, filename)
 
-func newSpriteRenderer(container *element ,renderer *sdl.Renderer,filename string) *spriteRenderer {
+	_, _, width, height, err := tex.Query()
+	if err != nil {
+		panic(fmt.Errorf("Querying %v caused an error: ", err))
+	}
+
 	return &spriteRenderer{
 		container: container,
-		tex : textureFromBMP(renderer,filename),
-
+		tex:       tex,
+		width:     float64(width),
+		height:    float64(height),
 	}
-
-
 }
 
-func (sr *spriteRenderer) Draw(renderer *sdl.Renderer) error {
+func (sr *spriteRenderer) draw(renderer *sdl.Renderer) error {
 
-	_, _,width,height, err := sr.tex.Query()
-	if err != nil {
-		return fmt.Errorf("Querying %v caused an error: ", err)
-	}
+	// convert coords to top left of sprite
+	x := sr.container.position.x - sr.width/2.0
+	y := sr.container.position.y - sr.height/2.0
 
-	x := sr.container.position.x - float64(width)/2.0
-	y := sr.container.position.y -float64( height) /2.0
+	// convert x,y from floats to ints
+	// main character needs no rotation. default is zero.
 	renderer.CopyEx(
 		sr.tex,
-		&sdl.Rect{X: 0, Y: 0, width, height},
-		&sdl.Rect{X: int32(x), Y: int32(y), W: width, H: height },
+		&sdl.Rect{X: 0, Y: 0, W: int32(sr.width), H: int32(sr.height)},
+		&sdl.Rect{X: int32(x), Y: int32(y), W: int32(sr.width), H: int32(sr.height)},
 		sr.container.rotation,
-		&sdl.Point{X: width / 2, Y: height / 2},
-		sdl.FLIP_NONE
+		&sdl.Point{X: int32(sr.width) / 2, Y: int32(sr.height) / 2},
+		sdl.FLIP_NONE,
 	)
-
 	return nil
 }
 
-// To do - An update function isn't necessary, for anything besides the contract to be a component
-func (sr *spriteRenderer) Update(renderer *sdl.Renderer) error {
+// TODO Does this function require anything? Or is it just satisfying the contract?
+func (sr *spriteRenderer) update() error {
 	return nil
 }
-
-
-

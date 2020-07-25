@@ -14,8 +14,8 @@ type vector struct {
 
 // every component requires these functions
 type component interface {
-	Update() error
-	Draw(renderer *sdl.Renderer) error
+	update() error
+	draw(renderer *sdl.Renderer) error
 }
 
 // container of state for element, aka entity
@@ -38,14 +38,37 @@ func (e *element) addComponent(c component) {
 	e.components = append(e.components, c)
 }
 
+// getComponent returns component of type provided.
 func (e *element) getComponent(targetType component) component {
 	typ := reflect.TypeOf(targetType)
 
-	for _, c := range e.components{
+	for _, c := range e.components {
 		if reflect.TypeOf(c) == typ {
 			return c
 		}
 	}
 
 	panic(fmt.Sprintf("Attemped to retrieve component of type %v. This component does not exist.", typ))
+}
+
+func (e *element) draw(renderer *sdl.Renderer) error {
+	for _, comp := range e.components {
+		err := comp.draw(renderer)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (e *element) update() error {
+	for _, comp := range e.components {
+		err := comp.update()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
