@@ -43,6 +43,7 @@ var bulletPool []*element
 func initBPool(renderer *sdl.Renderer) {
 	for i := 0; i < 20; i++ {
 		b := newBullet(renderer)
+		elements = append(elements, b)
 		bulletPool = append(bulletPool, b)
 	}
 }

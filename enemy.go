@@ -8,24 +8,22 @@ import (
 
 const enemySize = 128
 
-type enemy struct {
-	tex  *sdl.Texture
-	x, y float64
-}
+// type enemy struct {
+// 	tex  *sdl.Texture
+// 	x, y float64
+// }
 
-// create new enemy, requires renderer
-func newEnemy(renderer *sdl.Renderer, x, y float64) (e enemy) {
-	e.tex = textureFromBMP(renderer,"assets/Enemy.bmp")
-	e.x = x
-	e.y = y
+func newEnemy(renderer *sdl.Renderer, position vector) *element {
+	enemy := &element{}
+	enemy.position = position
+	enemy.rotation = 0
 
-	return e
-}
+	sr := newSpriteRenderer(enemy, renderer, "assets/Enemy.bmp" )
 
-func (e *enemy) draw(renderer *sdl.Renderer) {
-	x := e.x 
-	y := e.y 
-	renderer.Copy(e.tex,
-		&sdl.Rect{X: 0, Y: 0, W: enemySize, H: enemySize},
-		&sdl.Rect{X: int32(x), Y: int32(y), W: enemySize, H: enemySize})
+	enemy.addComponent(sr)
+
+	enemy.active = true
+
+	return enemy
+
 }
