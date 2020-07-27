@@ -26,6 +26,7 @@ type element struct {
 	position   vector
 	rotation   float64
 	active     bool
+	tag        string
 	collisions []circle
 	components []component
 }
@@ -77,10 +78,9 @@ func (e *element) update() error {
 	return nil
 }
 
-
 func (e *element) collision(other *element) error {
-	for _, comp := range e.components{
-		err:= comp.onCollision(other)
+	for _, comp := range e.components {
+		err := comp.onCollision(other)
 		if err != nil {
 			fmt.Println("Error occured while checking collisions. Error: ", err)
 		}

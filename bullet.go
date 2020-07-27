@@ -20,11 +20,11 @@ func newBullet(renderer *sdl.Renderer) *element {
 
 	bullet.addComponent(mv)
 
-
 	col := circle{
 		center: bullet.position,
 		radius: 1,
 	}
+	bullet.tag = "projectile"
 	bullet.collisions = append(bullet.collisions, col)
 	bullet.active = false
 

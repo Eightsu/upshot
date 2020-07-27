@@ -24,7 +24,11 @@ func (damageTarget *damageable) update() error {
 }
 
 func (damageTarget *damageable) onCollision(other *element) error {
-	damageTarget.container.active = false
+
+	if other.tag == "projectile" {
+		damageTarget.container.active = false
+
+	}
 	return nil
 
 }
