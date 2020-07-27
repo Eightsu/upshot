@@ -27,6 +27,12 @@ func newKBShooter(container *element, cooldown time.Duration) *keyBoardShooter {
 	}
 }
 
+func (shooter *keyBoardShooter) onCollision(e *element) error {
+
+	return nil
+
+}
+
 func (shooter *keyBoardShooter) shoot(x float64, y float64) {
 	if b, ok := bulletFromPool(); ok {
 
@@ -68,18 +74,23 @@ func newKBInput(container *element, speed float64) *kbInput {
 
 }
 
-func (entity *kbInput) update() error {
+// TODO fill out the method.
+func (kb *kbInput) onCollision(e *element) error {
+	return nil
+}
+
+func (kb *kbInput) update() error {
 	keys := sdl.GetKeyboardState()
 
-	cont := entity.container
+	cont := kb.container
 
 	if keys[sdl.SCANCODE_LEFT] == 1 {
-		if cont.position.x-(entity.sr.width/2.0) > 0 {
-			cont.position.x -= entity.speed
+		if cont.position.x-(kb.sr.width/2.0) > 0 {
+			cont.position.x -= kb.speed
 		}
 	} else if keys[sdl.SCANCODE_RIGHT] == 1 {
-		if cont.position.x+(entity.sr.height/2.0) < windowWidth {
-			cont.position.x += entity.speed
+		if cont.position.x+(kb.sr.height/2.0) < windowWidth {
+			cont.position.x += kb.speed
 		}
 	}
 
@@ -109,6 +120,6 @@ func (entity *kbInput) update() error {
 // 	return nil
 // }
 
-func (entity *kbInput) draw(renderer *sdl.Renderer) error {
+func (kb *kbInput) draw(renderer *sdl.Renderer) error {
 	return nil
 }

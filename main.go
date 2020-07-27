@@ -71,6 +71,11 @@ func main() {
 			}
 		}
 		renderer.Present()
+		err := checkCollisions()
+		if err != nil{
+			fmt.Println("Error occurred while looping through collisions")
+			return 
+		}
 	}
 
 }

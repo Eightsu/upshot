@@ -20,6 +20,17 @@ func newEnemy(renderer *sdl.Renderer, position vector) *element {
 
 	sr := newSpriteRenderer(enemy, renderer, "assets/Enemy.bmp" )
 
+	col := circle{
+		center: enemy.position,
+		radius: 30,
+	}
+	enemy.collisions = append(enemy.collisions, col)
+
+	dmg := newDamageable(enemy)
+
+	enemy.addComponent(dmg) 
+
+
 	enemy.addComponent(sr)
 
 	enemy.active = true

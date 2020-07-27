@@ -45,6 +45,10 @@ func newSpriteRenderer(container *element, renderer *sdl.Renderer, filename stri
 		height:    float64(height),
 	}
 }
+// TODO fill out the method.
+func (sr *spriteRenderer) onCollision(e *element)error {
+	return nil
+}
 
 func (sr *spriteRenderer) draw(renderer *sdl.Renderer) error {
 

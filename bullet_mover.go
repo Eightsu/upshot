@@ -19,7 +19,7 @@ func newBulletMover(container *element, speed float64) *bulletMover {
 }
 
 func (b *bulletMover) draw(renderer *sdl.Renderer) error {
-return nil
+	return nil
 }
 
 func (b *bulletMover) update() error {
@@ -32,5 +32,14 @@ func (b *bulletMover) update() error {
 	if b.container.position.y > windowHeight || b.container.position.y < 0 {
 		b.container.active = false
 	}
+	b.container.collisions[0].center = b.container.position
+
+	return nil
+}
+
+// TODO fill out the method.
+func (b *bulletMover) onCollision(e *element) error {
+	b.container.active = false
+
 	return nil
 }
